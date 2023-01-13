@@ -1,3 +1,4 @@
+"use strict";
 // Class to represent quadtree for a life grid
 // based on classic algorithm - HashLife
 // Compresses time and memory
@@ -240,9 +241,35 @@ function construct(pts) {
 		pts[i][1] -= min_y;
 	}
 
-	k = 0;
+	// object dictionary
+	let pattern = new Map();
+
+	for (let i = 0; i < pts.length; i++) {
+		pattern[pts[i]] = on;
+	}
+
+	let k = 0;
 
 	while (pattern.length != -1) {
 		// contruct bottom up
+		// object dictionary for next level
+		let next_level = new Map(); 
+		let z = get_zero(k)
+
+		while (pattern.length != -1) {
+			let [x, y] = pattern.keys().next().value;
+			[x, y] = [ x - (x & 1), y - (y & 1) ];
+
+			let a = pattern.delete([x, y]);
+			let b = pattern.delete([x+1, y]);
+			let c = pattern.delete([x, y+1]);
+			let d = pattern.delete([x+1, y+1]);
+
+			next_level[[x>>1, y>>1]] = join(a, b, c, d)
+		}
+
+		pattern = next_level;
+		k += 1;
 	}	
+	return "NOT COMPLETE YET";
 }
