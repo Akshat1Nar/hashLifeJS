@@ -34,13 +34,13 @@ class Node {
 	static join(a, b, c, d) {
 		
 		// update number of cells
-		n = a.n + b.n + c.n + d.n;
+		let n = a.n + b.n + c.n + d.n;
 
 		// yet to implement
-		nHash = 0n;
+		let nHash = 0n;
 
 		// return node
-		return Node(a.k+1, a, b, c, d, n, nHash);
+		return new Node(a.k+1, a, b, c, d, n, nHash);
 	}
 	
 	// empty node at level k
@@ -51,15 +51,15 @@ class Node {
 		if (k == 0)
 			return off;
 
-		prevLevel = getZero(k-1);
-		join(prevLevel, prevLevel, prevLevel, prevLevel);
+		let prevLevel = Node.getZero(k-1);
+		return Node.join(prevLevel, prevLevel, prevLevel, prevLevel);
 	}
 
 	// pad a node at level k for level k+1 with zeros
 	static centre(node) {
 		
 		// get zero tree at level one below
-		tmp = getZero(node.k - 1);
+		let tmp = getZero(node.k - 1);
 
 		// return padded
 		return join(
@@ -79,7 +79,7 @@ let off = new Node(0, null, null, null, null, 0, 0);
 function life(cells, centre) {
 	
 	// count of neighbours of central square
-	neighbours = 0;
+	let neighbours = 0;
 	for(let i=0; i < cells.length; i++ )
 		neighbours += cells[i].n;
 
@@ -94,10 +94,10 @@ function life(cells, centre) {
 function life_4x4(node) {
 
 	// solve life for mid 2x2 matrix square by square
-	ad = life([node.a.a, node.a.b, node.b.a, node.a.c, node.b.c, node.c.a, node.c.b, node.d.a], node.a.d); 	
-	bc = life([node.a.b, node.b.a, node.b.b, node.a.d, node.b.d, node.c.b, node.d.a, node.d.b], node.b.c); 	
-	cb = life([node.a.c, node.a.d, node.b.c, node.c.a, node.d.a, node.c.c, node.c.d, node.d.c], node.c.b); 	
-	da = life([node.a.d, node.b.c, node.b.d, node.c.b, node.d.b, node.c.d, node.d.c, node.d.d], node.d.a); 	
+	let ad = life([node.a.a, node.a.b, node.b.a, node.a.c, node.b.c, node.c.a, node.c.b, node.d.a], node.a.d); 	
+	let bc = life([node.a.b, node.b.a, node.b.b, node.a.d, node.b.d, node.c.b, node.d.a, node.d.b], node.b.c); 	
+	let cb = life([node.a.c, node.a.d, node.b.c, node.c.a, node.d.a, node.c.c, node.c.d, node.d.c], node.c.b); 	
+	let da = life([node.a.d, node.b.c, node.b.d, node.c.b, node.d.b, node.c.d, node.d.c, node.d.d], node.d.a); 	
 
 	// join and return
 	return Node.join(ab, bc, cb, da);
@@ -120,15 +120,15 @@ function successor(node, j=null) {
 	else
 		j = min(j, node.k - 2);
 	
-	c1 = successor(Node.join(node.a.a, node.a.b, node.a.c, node.a.d), j);
-	c2 = successor(Node.join(node.a.b, node.b.a, node.a.d, node.b.c), j);
-	c3 = successor(Node.join(node.b.a, node.b.b, node.b.c, node.b.d), j);
-	c4 = successor(Node.join(node.a.c, node.a.d, node.c.a, node.c.b), j);
-	c5 = successor(Node.join(node.a.d, node.b.c, node.c.b, node.d.a), j);
-	c6 = successor(Node.join(node.b.c, node.b.d, node.d.a, node.d.b), j);
-	c7 = successor(Node.join(node.c.a, node.c.b, node.c.c, node.c.d), j);
-	c8 = successor(Node.join(node.c.b, node.d.a, node.c.d, node.d.c), j);
-	c9 = successor(Node.join(node.d.a, node.d.b, node.d.c, node.d.d), j);
+	let c1 = successor(Node.join(node.a.a, node.a.b, node.a.c, node.a.d), j);
+	let c2 = successor(Node.join(node.a.b, node.b.a, node.a.d, node.b.c), j);
+	let c3 = successor(Node.join(node.b.a, node.b.b, node.b.c, node.b.d), j);
+	let c4 = successor(Node.join(node.a.c, node.a.d, node.c.a, node.c.b), j);
+	let c5 = successor(Node.join(node.a.d, node.b.c, node.c.b, node.d.a), j);
+	let c6 = successor(Node.join(node.b.c, node.b.d, node.d.a, node.d.b), j);
+	let c7 = successor(Node.join(node.c.a, node.c.b, node.c.c, node.c.d), j);
+	let c8 = successor(Node.join(node.c.b, node.d.a, node.c.d, node.d.c), j);
+	let c9 = successor(Node.join(node.d.a, node.d.b, node.d.c, node.d.d), j);
 
 	if (j< node.k-2)
 		return Node.join(
@@ -195,11 +195,12 @@ function ffwd(node, n) {
 // based on their level they are given grayscale values from 0-1
 function expand(node, x=0, y=0, clip=null, level=0) {
 
+	console.log(node);
 	if (node.n == 0)
 		// return empty array
 		return [];
 	
-	size = 2**node.k;
+	let size = 2**node.k;
 
 	if (clip!=null) {
 		if (x+size < clip[0] || x > clip[1] ||
@@ -213,7 +214,7 @@ function expand(node, x=0, y=0, clip=null, level=0) {
 		return [[x>>level, y>>level, gray]];
 	}
 
-	offset = size >> 1;
+	let offset = size >> 1;
 	return (
 		expand(node.a, x, y, clip, level)
 		+ expand(node.b, x + offset, y, clip, level)
@@ -224,10 +225,11 @@ function expand(node, x=0, y=0, clip=null, level=0) {
 
 // turn list of [x, y] coordinates into a quadtree
 function construct(pts) {
+	if (pts.length <=0 ) return null;
 
 	// shift origin to (0, 0)
-	min_x = pts[0][0];
-	min_y = pts[0][1];
+	let min_x = pts[0][0];
+	let min_y = pts[0][1];
 
 	// find minimum first
 	for (let i = 0; i < pts.length; i++) {
@@ -245,31 +247,48 @@ function construct(pts) {
 	let pattern = new Map();
 
 	for (let i = 0; i < pts.length; i++) {
-		pattern[pts[i]] = on;
+		pattern.set(String(pts[i]), on);
 	}
 
 	let k = 0;
 
-	while (pattern.length != -1) {
+	while (pattern.size > 1) {
 		// contruct bottom up
 		// object dictionary for next level
-		let next_level = new Map(); 
-		let z = get_zero(k)
+		let z = Node.getZero(k)
+		let nextLevel = new Map(); 
 
-		while (pattern.length != -1) {
-			let [x, y] = pattern.keys().next().value;
-			[x, y] = [ x - (x & 1), y - (y & 1) ];
+		while (pattern.size != 0) {
+		// for (let [x, y] of pattern.keys() ) {
+			let [x, y] = pattern.keys().next().value.split(',').map(Number);
+			
+			x = x - (x & 1);
+			y = y - (y & 1);
+			
+			let [a, b, c, d] = [z, z, z, z];
+			if(pattern.has(String([x, y]))) {
+				a = pattern.get(String([x, y]));
+				a = pattern.delete(String([x, y]));
+			}
+			if(pattern.has(String([x+1, y]))) {
+				b = pattern.get(String([x+1, y]));
+				b = pattern.delete(String([x+1, y]));
+			}
+			if(pattern.has(String([x, y+1]))) {
+				c = pattern.get(String([x, y+1]));
+				c = pattern.delete(String([x, y+1]));
+			}
+			if(pattern.has(String([x+1, y+1]))) {
+				d = pattern.get(String([x+1, y+1]));
+				d = pattern.delete(String([x+1, y+1]));
+			}
 
-			let a = pattern.delete([x, y]);
-			let b = pattern.delete([x+1, y]);
-			let c = pattern.delete([x, y+1]);
-			let d = pattern.delete([x+1, y+1]);
-
-			next_level[[x>>1, y>>1]] = join(a, b, c, d)
+			nextLevel.set(String([x>>1, y>>1]), Node.join(a, b, c, d));
 		}
+		console.log(pattern.size);
 
-		pattern = next_level;
+		pattern = nextLevel;
 		k += 1;
 	}	
-	return "NOT COMPLETE YET";
+	return pattern.get(String([0, 0]));
 }
